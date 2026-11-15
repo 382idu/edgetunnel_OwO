@@ -1,0 +1,22 @@
+name: Upstream Sync
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天凌晨0点自动检查更新
+  workflow_dispatch:    # 允许你手动点击按钮触发
+
+jobs:
+  sync_latest_from_upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+
+      - name: Sync upstream changes
+        uses: aormsby/fork-sync-with-upstream-action@v3.4.3
+        with:
+          upstream_sync_repo: cmliu/edgetunnel
+          upstream_sync_branch: main
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          sync_mode: 'sync' # 强制同步
